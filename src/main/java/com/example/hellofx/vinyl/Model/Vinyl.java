@@ -28,8 +28,6 @@ public class Vinyl {
         state.get().reserve(this);
     }
 
-    // Testing github
-
     public void borrow() {
         state.get().borrow(this);
     }
