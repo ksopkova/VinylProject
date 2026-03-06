@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.hellofx.vinyl.View.MainScreenView">
+
+    <center>
+        <TableView fx:id="vinylTable">
+            <columns>
+                <TableColumn fx:id="titleColumn" text="Title"/>
+                <TableColumn fx:id="artistColumn" text="Artist"/>
+                <TableColumn fx:id="yearColumn" text="Year"/>
+                <TableColumn fx:id="stateColumn" text="State"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <right>
+        <VBox spacing="10" alignment="CENTER">
+            <Button text="Reserve" onAction="#onReserve"/>
+            <Button text="Borrow" onAction="#onBorrow"/>
+            <Button text="Return" onAction="#onReturn"/>
+            <Button text="Remove" onAction="#onRemove"/>
+        </VBox>
+    </right>
+
+</BorderPane>
