@@ -7,7 +7,7 @@ public class Vinyl {
     private final StringProperty title = new SimpleStringProperty();   //bcs I'm creating object not String (inside this object is information for Java Fx)//
     private final StringProperty artist = new SimpleStringProperty();
     private final IntegerProperty year = new SimpleIntegerProperty();
-    private final ObjectProperty<VinylState> state = new SimpleObjectProperty<>(); //I use ObjectProperty to take advantage of JavaFX’s built-in Observer mechanism, which ensures that the UI automatically reacts to changes in the state object. Additionally, it enables me to maintain a polymorphic implementation of the State pattern rather than relying on a simple enum or String to represent the state.
+    private final ObjectProperty<IVinylState> state = new SimpleObjectProperty<>(); //I use ObjectProperty to take advantage of JavaFX’s built-in Observer mechanism, which ensures that the UI automatically reacts to changes in the state object. Additionally, it enables me to maintain a polymorphic implementation of the State pattern rather than relying on a simple enum or String to represent the state.
     private boolean markedForDeletion = false;
     private final StringProperty stateName = new SimpleStringProperty();
 
@@ -57,7 +57,7 @@ public class Vinyl {
         return stateName;
     }
 
-    public void setState(VinylState newState) {
+    public void setState(IVinylState newState) {
         state.set(newState);
     }
 

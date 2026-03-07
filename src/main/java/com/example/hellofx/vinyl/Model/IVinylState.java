@@ -1,7 +1,7 @@
 package com.example.hellofx.vinyl.Model;
 //kazda metoda tak dostane referenciu na vinyl a STATE rozhodne čo s vinylom urobi//
 
-public interface VinylState {
+public interface IVinylState {
 
     void reserve(Vinyl vinyl);
 

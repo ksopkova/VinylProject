@@ -1,6 +1,6 @@
 package com.example.hellofx.vinyl.Model;
 
-public class ReservedState implements VinylState{
+public class ReservedState implements IVinylState{
     @Override
     public void reserve(Vinyl vinyl) {
         throw new IllegalStateException(
