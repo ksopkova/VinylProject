@@ -4,6 +4,13 @@ public class AvailableState implements VinylState{
 
     @Override
     public void reserve(Vinyl vinyl) {
+
+        if (vinyl.isMarkedForDeletion()) {
+            throw new IllegalStateException(
+                    "Vinyl is marked for removal and cannot be reserved."
+            );
+        }
+
         vinyl.setState(new ReservedState());
     }
 

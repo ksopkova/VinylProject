@@ -22,9 +22,7 @@ public class BorrowedState implements VinylState{
 
     @Override
     public void remove(Vinyl vinyl) {
-        throw new IllegalStateException(
-                "Cannot remove a borrowed vinyl."
-        );
+       vinyl.markForDeletion();
     }
 
     @Override

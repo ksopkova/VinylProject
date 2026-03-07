@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import com.example.hellofx.vinyl.Model.RandomUserSimulator;
 
 public class MainScreenView {
 
@@ -41,14 +42,22 @@ public class MainScreenView {
         viewModel.addVinyl(new Vinyl("Gatkove hity", "Gatko Gatkovic", 2026));
         viewModel.addVinyl(new Vinyl("Waka waka", "Shakira",2010));
 
+
         // nastavenie columns
         titleColumn.setCellValueFactory(data -> data.getValue().getTitleProperty());
         artistColumn.setCellValueFactory(data -> data.getValue().getArtistProperty());
         yearColumn.setCellValueFactory(data -> data.getValue().getYearProperty());
         // zobrazenie názvu stavu
-        stateColumn.setCellValueFactory(data -> data.getValue().getStateName());
-
+        stateColumn.setCellValueFactory(
+                data -> data.getValue().stateNameProperty()
+        );
         vinylTable.setItems(viewModel.getVinyls());
+
+        //here I create simulation of multiple users using my app
+        Thread simulator = new Thread(new RandomUserSimulator(viewModel));
+        simulator.setDaemon(true);
+        simulator.start();
+
     }
 
     @FXML
@@ -78,5 +87,7 @@ public class MainScreenView {
         viewModel.remove(selected);
         vinylTable.refresh();
     }
+
+
 
 }

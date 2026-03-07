@@ -52,10 +52,9 @@ public class Vinyl {
     public StringProperty getArtistProperty() { return artist; }
     public IntegerProperty getYearProperty() { return year; }
 
-    public StringProperty getStateName() {
-        return new SimpleStringProperty(
-                state.get().getName()
-        );
+
+    public StringProperty stateNameProperty() {
+        return stateName;
     }
 
     public void setState(VinylState newState) {
