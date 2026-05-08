@@ -1,4 +1,4 @@
-package com.example.hellofx.vinyl.Model;
+package Simulation;
 
 import com.example.hellofx.vinyl.Model.Vinyl;
 import com.example.hellofx.vinyl.ViewModel.MainScreenViewModel;

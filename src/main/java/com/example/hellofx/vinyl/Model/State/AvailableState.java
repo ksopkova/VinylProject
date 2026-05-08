@@ -1,6 +1,8 @@
-package com.example.hellofx.vinyl.Model;
+package com.example.hellofx.vinyl.Model.State;
 
-public class AvailableState implements IVinylState{
+import com.example.hellofx.vinyl.Model.Vinyl;
+
+public class AvailableState implements IVinylState {
 
     @Override
     public void reserve(Vinyl vinyl) {

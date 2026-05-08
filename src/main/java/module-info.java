@@ -11,4 +11,8 @@ module com.example.hellofx.vinyl{
     opens com.example.hellofx.vinyl.View to javafx.fxml;
     exports com.example.hellofx.vinyl.ViewModel;
     opens com.example.hellofx.vinyl.ViewModel to javafx.fxml;
+    exports com.example.hellofx.vinyl.Model.State;
+    opens com.example.hellofx.vinyl.Model.State to javafx.fxml;
+    exports Simulation;
+    opens Simulation to javafx.fxml;
 }

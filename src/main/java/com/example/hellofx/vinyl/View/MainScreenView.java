@@ -6,7 +6,7 @@ import com.example.hellofx.vinyl.ViewModel.MainScreenViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
-import com.example.hellofx.vinyl.Model.RandomUserSimulator;
+import Simulation.RandomUserSimulator;
 
 public class MainScreenView {
 

@@ -1,5 +1,7 @@
-package com.example.hellofx.vinyl.Model;
+package com.example.hellofx.vinyl.Model.State;
 //kazda metoda tak dostane referenciu na vinyl a STATE rozhodne čo s vinylom urobi//
+
+import com.example.hellofx.vinyl.Model.Vinyl;
 
 public interface IVinylState {
 

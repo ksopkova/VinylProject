@@ -1,5 +1,7 @@
 package com.example.hellofx.vinyl.Model;
 
+import com.example.hellofx.vinyl.Model.State.AvailableState;
+import com.example.hellofx.vinyl.Model.State.IVinylState;
 import javafx.beans.property.*;
 
 public class Vinyl {
