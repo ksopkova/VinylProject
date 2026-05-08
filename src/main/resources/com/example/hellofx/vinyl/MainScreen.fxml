@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.hellofx.vinyl.View.MainScreenView">
 
     <center>
@@ -17,6 +17,9 @@
                 <TableColumn fx:id="artistColumn" text="Artist"/>
                 <TableColumn fx:id="yearColumn" text="Year"/>
                 <TableColumn fx:id="stateColumn" text="State"/>
+
+                <TableColumn fx:id="reservedByColumn" text="Reserved By"/>
+                <TableColumn fx:id="borrowedByColumn" text="Borrowed By"/>
             </columns>
         </TableView>
     </center>

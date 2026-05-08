@@ -20,7 +20,6 @@ public class Vinyl {
 
     private final BooleanProperty removalRequested = new SimpleBooleanProperty(false);
     private final BooleanProperty reservationBlocked = new SimpleBooleanProperty(false);
-    private boolean markedForDeletion;
 
 
     public Vinyl(String title, String artist, int year) {
@@ -55,14 +54,7 @@ public class Vinyl {
         state.get().remove(this);
     }
 
-    // deletion flag
-    public void markForDeletion() {
-        this.markedForDeletion = true;
-    }
 
-    public boolean isMarkedForDeletion() {
-        return markedForDeletion;
-    }
 
 
     // NEW: reservedBy/borrowedBy accessors

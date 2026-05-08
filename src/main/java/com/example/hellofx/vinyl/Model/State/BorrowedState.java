@@ -7,11 +7,10 @@ public class BorrowedState implements IVinylState {
 
     @Override
     public void reserve(Vinyl vinyl, User user) {
-        // Podľa zadania: môžeš rezervovať aj borrowed vinyl, ak ešte nie je reserved
-        if (vinyl.isMarkedForDeletion()) {
-            // toto máš teraz ako "markedForDeletion", ale podľa zadania by to malo znamenať
-            // "about to be removed" => nové rezervácie zakázať
-            throw new IllegalStateException("Vinyl is marked for removal and cannot be reserved.");
+        // Borrowed vinyl can be reserved if it is not already reserved,
+        // but after a remove-request we must block NEW reservations.
+        if (vinyl.isReservationBlocked()) {
+            throw new IllegalStateException("Vinyl is about to be removed and cannot be reserved.");
         }
 
         if (vinyl.isReserved()) {
@@ -19,8 +18,7 @@ public class BorrowedState implements IVinylState {
         }
 
         vinyl.setReservedBy(user);
-        // stav ostáva Borrowed, len si pamätáme rezerváciu
-        // (neskôr môžeš spraviť extra stav BorrowedReservedState, ale nie je nutné)
+        // state stays Borrowed; after returnVinyl it will go to ReservedState
     }
 
     @Override
@@ -30,12 +28,12 @@ public class BorrowedState implements IVinylState {
 
     @Override
     public void returnVinyl(Vinyl vinyl, User user) {
-        // voliteľne: kontrola že vracia ten istý user
+        // optional: enforce only the borrower can return
         // if (!vinyl.isBorrowedBy(user)) throw new IllegalStateException("Not borrowed by you");
 
         vinyl.setBorrowedBy(null);
 
-        // ak je rezervovaný, po návrate nie je "Available", ale "Reserved"
+        // if reserved, after return it becomes Reserved; otherwise Available
         if (vinyl.isReserved()) {
             vinyl.setState(new ReservedState());
         } else {
@@ -45,11 +43,10 @@ public class BorrowedState implements IVinylState {
 
     @Override
     public void remove(Vinyl vinyl) {
-        // podľa zadania: keď je borrowed, remove má len označiť "pending removal"
-        // a nesmie sa hneď odstrániť zo zoznamu.
-        // ZATIAĽ to necháme ako markForDeletion, ale POZOR: musíš potom opraviť Library.remove()
-        // aby nevymazával hneď, keď je borrowed/reserved.
-        vinyl.markForDeletion();
+        // Borrowed => cannot be removed right now; mark pending removal
+        // and block new reservations (existing reservation, if any, stays)
+        vinyl.requestRemoval();
+        vinyl.blockReservations();
     }
 
     @Override

@@ -12,15 +12,14 @@ public class ReservedState implements IVinylState {
 
     @Override
     public void borrow(Vinyl vinyl, User user) {
-        // kľúčové pravidlo zo zadania:
-        // požičať môže iba ten, kto má rezerváciu
+        // can borrow only if it is reserved by the same user
         if (!vinyl.isReservedBy(user)) {
             throw new IllegalStateException("Cannot borrow: vinyl is reserved by another user.");
         }
 
         vinyl.setBorrowedBy(user);
 
-        // rezervácia sa po požičaní "spotrebuje"
+        // reservation is consumed by borrowing
         vinyl.setReservedBy(null);
 
         vinyl.setState(new BorrowedState());
@@ -33,9 +32,10 @@ public class ReservedState implements IVinylState {
 
     @Override
     public void remove(Vinyl vinyl) {
-        // Najjednoduchšie riešenie: remove rieši Library.remove()
-        // takže tu nič nerob (alebo môžeš hodiť výnimku, aby bolo jasné že sa to nepoužíva)
-        throw new IllegalStateException("Use Library.remove(vinyl) to remove from library.");
+        // Reserved => cannot remove immediately; mark pending removal
+        // Block NEW reservations; keep existing reserver so they can still borrow.
+        vinyl.requestRemoval();
+        vinyl.blockReservations();
     }
 
     @Override
@@ -43,4 +43,3 @@ public class ReservedState implements IVinylState {
         return "Reserved";
     }
 }
-

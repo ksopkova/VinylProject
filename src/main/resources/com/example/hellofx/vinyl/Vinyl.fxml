@@ -6,7 +6,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hellofx.vinyl.VinylController">
+<fx:root type="BorderPane"
+         xmlns="http://javafx.com/javafx/25"
+         xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.example.hellofx.vinyl.Vinyl">
 
     <center>
         <TableView fx:id="vinylTable">
@@ -15,6 +18,10 @@
                 <TableColumn fx:id="artistColumn" text="Artist" />
                 <TableColumn fx:id="yearColumn" text="Year" />
                 <TableColumn fx:id="stateColumn" text="State" />
+
+                <!-- NEW columns -->
+                <TableColumn fx:id="reservedByColumn" text="Reserved By" />
+                <TableColumn fx:id="borrowedByColumn" text="Borrowed By" />
             </columns>
         </TableView>
     </center>
