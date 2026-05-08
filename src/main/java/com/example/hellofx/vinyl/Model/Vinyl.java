@@ -9,9 +9,18 @@ public class Vinyl {
     private final StringProperty title = new SimpleStringProperty();   //bcs I'm creating object not String (inside this object is information for Java Fx)//
     private final StringProperty artist = new SimpleStringProperty();
     private final IntegerProperty year = new SimpleIntegerProperty();
-    private final ObjectProperty<IVinylState> state = new SimpleObjectProperty<>(); //I use ObjectProperty to take advantage of JavaFX’s built-in Observer mechanism, which ensures that the UI automatically reacts to changes in the state object. Additionally, it enables me to maintain a polymorphic implementation of the State pattern rather than relying on a simple enum or String to represent the state.
-    private boolean markedForDeletion = false;
+
+    private final ObjectProperty<IVinylState> state = new SimpleObjectProperty<>();
+    //I use ObjectProperty to take advantage of JavaFX’s built-in Observer mechanism, which ensures that the UI automatically reacts to changes in the state object. Additionally, it enables me to maintain a polymorphic implementation of the State pattern rather than relying on a simple enum or String to represent the state.
     private final StringProperty stateName = new SimpleStringProperty();
+
+    // NEW: who reserved / who borrowed
+    private final ObjectProperty<User> reservedBy = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<User> borrowedBy = new SimpleObjectProperty<>(null);
+
+    private final BooleanProperty removalRequested = new SimpleBooleanProperty(false);
+    private final BooleanProperty reservationBlocked = new SimpleBooleanProperty(false);
+    private boolean markedForDeletion;
 
 
     public Vinyl(String title, String artist, int year) {
@@ -27,28 +36,60 @@ public class Vinyl {
     }
 
 
-    public void reserve() {       // delegate the reserve(this) call to the current state object because I am implementing the State pattern. In the State pattern, behavior depends on the current state of the object, and each state encapsulates its own rules and transitions. Instead of using conditional logic inside the Vinyl class (such as multiple if-else statements), the Vinyl object delegates the responsibility to the current VinylState. This ensures that behavior changes dynamically when the state changes and keeps the Vinyl class clean and compliant with the Open/Closed Principle
-        state.get().reserve(this);
+
+
+    // CHANGED: reserve/borrow/return need a user
+    public void reserve(User user) {
+        state.get().reserve(this, user);
     }
 
-    public void borrow() {
-        state.get().borrow(this);
+    public void borrow(User user) {
+        state.get().borrow(this, user);
     }
 
-    public void returnVinyl() {
-        state.get().returnVinyl(this);
+    public void returnVinyl(User user) {
+        state.get().returnVinyl(this, user);
     }
 
     public void remove() {
         state.get().remove(this);
     }
-    
+
+    // deletion flag
     public void markForDeletion() {
         this.markedForDeletion = true;
     }
 
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
+    }
+
+
+    // NEW: reservedBy/borrowedBy accessors
+    public User getReservedBy() { return reservedBy.get(); }
+    public ObjectProperty<User> reservedByProperty() { return reservedBy; }
+    public void setReservedBy(User user) { reservedBy.set(user); }
+
+    public User getBorrowedBy() { return borrowedBy.get(); }
+    public ObjectProperty<User> borrowedByProperty() { return borrowedBy; }
+    public void setBorrowedBy(User user) { borrowedBy.set(user); }
+
+    public boolean isReserved() { return getReservedBy() != null; }
+    public boolean isBorrowed() { return getBorrowedBy() != null; }
+    public boolean isReservedBy(User user) { return user != null && user.equals(getReservedBy()); }
+
+    public boolean isRemovalRequested() { return removalRequested.get(); }
+    public BooleanProperty removalRequestedProperty() { return removalRequested; }
+    public void requestRemoval() { removalRequested.set(true); }
+
+    public boolean isReservationBlocked() { return reservationBlocked.get(); }
+    public BooleanProperty reservationBlockedProperty() { return reservationBlocked; }
+    public void blockReservations() { reservationBlocked.set(true); }
+
+    // HELP WITH REMOVAL - when it needs to be removed physically
+    
+    public boolean canBeRemovedNow() {
+        return !isBorrowed() && !isReserved();
     }
 
 
