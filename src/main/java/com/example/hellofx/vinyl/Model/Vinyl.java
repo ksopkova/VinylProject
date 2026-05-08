@@ -11,6 +11,7 @@ public class Vinyl {
     private boolean markedForDeletion = false;
     private final StringProperty stateName = new SimpleStringProperty();
 
+
     public Vinyl(String title, String artist, int year) {
         this.title.set(title);  //when object's string is set JavaFX get notified about it//
         this.artist.set(artist);
@@ -47,6 +48,8 @@ public class Vinyl {
     public boolean isMarkedForDeletion() {
         return markedForDeletion;
     }
+
+
 
     public StringProperty getTitleProperty() { return title; }
     public StringProperty getArtistProperty() { return artist; }

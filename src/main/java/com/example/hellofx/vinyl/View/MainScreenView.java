@@ -1,15 +1,11 @@
 package com.example.hellofx.vinyl.View;
 
-import com.example.hellofx.vinyl.Model.AvailableState;
 import com.example.hellofx.vinyl.Model.Library;
 import com.example.hellofx.vinyl.Model.Vinyl;
 import com.example.hellofx.vinyl.ViewModel.MainScreenViewModel;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import com.example.hellofx.vinyl.Model.RandomUserSimulator;
 
 public class MainScreenView {
