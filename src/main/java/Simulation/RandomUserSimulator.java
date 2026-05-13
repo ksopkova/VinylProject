@@ -43,10 +43,14 @@ public class RandomUserSimulator implements Runnable {
                 User user = simUsers.get(random.nextInt(simUsers.size()));
                 int action = random.nextInt(4);
 
-                switch (action) {
-                    case 0 -> viewModel.reserveAs(vinyl, user);
-                    case 1 -> viewModel.borrowAs(vinyl, user);
-                    case 2 -> viewModel.returnAs(vinyl, user);
+                try {
+                    switch (action) {
+                        case 0 -> viewModel.reserveAs(vinyl, user);
+                        case 1 -> viewModel.borrowAs(vinyl, user);
+                        case 2 -> viewModel.returnAs(vinyl, user);
+                    }
+                } catch (IllegalStateException e) {
+                    System.out.println("Simulation skipped invalid action: " + e.getMessage());
                 }
             });
         }
