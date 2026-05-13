@@ -12,10 +12,13 @@ public class MainScreenViewModel {
     private final User currentUser = new User("qqqqq","User");
 
     public MainScreenViewModel(Library library) {
+
         this.library = library;
     }
 
+
     public ObservableList<Vinyl> getVinyls() {
+
         return library.getVinyls();
     }
 
@@ -23,35 +26,52 @@ public class MainScreenViewModel {
         library.addVinyl(vinyl);
     }
 
-    public void reserve(Vinyl vinyl) {
+    public String reserve(Vinyl vinyl) {
+        if (vinyl == null) return "Select a vinyl first.";
+
         try {
             library.reserve(vinyl, currentUser);
+            return "Vinyl reserved.";
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public void borrow(Vinyl vinyl) {
+    public String borrow(Vinyl vinyl) {
+        if (vinyl == null) return "Select a vinyl first.";
+
         try {
             library.borrow(vinyl,currentUser);
+            return "Vinyl borrowed.";
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public void returnVinyl(Vinyl vinyl) {
+    public String returnVinyl(Vinyl vinyl) {
+        if (vinyl == null) return "Select a vinyl first.";
+
         try {
             library.returnVinyl(vinyl,currentUser);
+            return "Vinyl returned.";
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public void remove(Vinyl vinyl) {
+    public String remove(Vinyl vinyl) {
+        if (vinyl == null) return "Select a vinyl first.";
+
         try {
+            boolean wasInLibrary = library.getVinyls().contains(vinyl);
             library.remove(vinyl);
+            if (wasInLibrary && !library.getVinyls().contains(vinyl)) {
+                return "Vinyl removed.";
+            }
+            return "Vinyl marked for removal.";
+
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 

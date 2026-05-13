@@ -6,6 +6,8 @@ import com.example.hellofx.vinyl.Model.Vinyl;
 import com.example.hellofx.vinyl.ViewModel.MainScreenViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -20,15 +22,18 @@ public class MainScreenView {
 
     @FXML private TableColumn<Vinyl, String> reservedByColumn;
     @FXML private TableColumn<Vinyl, String> borrowedByColumn;
+    @FXML private Button startSimulationButton;
+    @FXML private Label statusLabel;
 
     private MainScreenViewModel viewModel;
+    private boolean simulationStarted;
+    private Thread simulatorThread;
 
     public void initialize() {
         Library library = new Library();
         viewModel = new MainScreenViewModel(library);
 
         // test data
-// test data
         viewModel.addVinyl(new Vinyl("IGOR", "Tyler, The Creator", 2019));
         viewModel.addVinyl(new Vinyl("My Beautiful Dark Twisted Fantasy", "Kanye West", 2010));
         viewModel.addVinyl(new Vinyl("good kid, m.A.A.d city", "Kendrick Lamar", 2012));
@@ -81,36 +86,46 @@ public class MainScreenView {
                 )
         );
 
-        // CRITICAL: connect table to the ViewModel list
+        // connecting table to the ViewModel list
         vinylTable.setItems(viewModel.getVinyls());
-
-        // simulation thread
-        Thread simulator = new Thread(new RandomUserSimulator(viewModel));
-        simulator.setDaemon(true);
-        simulator.start();
     }
 
     @FXML
     private void onReserve() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        viewModel.reserve(selected);
+        statusLabel.setText(viewModel.reserve(selected));
     }
 
     @FXML
     private void onBorrow() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        viewModel.borrow(selected);
+        statusLabel.setText(viewModel.borrow(selected));
     }
 
     @FXML
     private void onReturn() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        viewModel.returnVinyl(selected);
+        statusLabel.setText(viewModel.returnVinyl(selected));
     }
 
     @FXML
     private void onRemove() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        viewModel.remove(selected);
+        statusLabel.setText(viewModel.remove(selected));
+    }
+
+    @FXML
+    private void onStartSimulation() {
+        if (simulationStarted) {
+            statusLabel.setText("Simulation is already running.");
+            return;
+        }
+
+        simulationStarted = true;
+        startSimulationButton.setDisable(true);
+        simulatorThread = new Thread(new RandomUserSimulator(viewModel));
+        simulatorThread.setDaemon(true);
+        simulatorThread.start();
+        statusLabel.setText("Simulation started.");
     }
 }
