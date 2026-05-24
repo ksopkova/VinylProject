@@ -13,6 +13,13 @@ module com.example.hellofx.vinyl{
     opens com.example.hellofx.vinyl.ViewModel to javafx.fxml;
     exports com.example.hellofx.vinyl.Model.State;
     opens com.example.hellofx.vinyl.Model.State to javafx.fxml;
+    exports com.example.hellofx.vinyl.Model.Observer;
+    opens com.example.hellofx.vinyl.Model.Observer to javafx.fxml;
+    exports com.example.hellofx.vinyl.client;
+    exports com.example.hellofx.vinyl.network.protocol;
+    exports com.example.hellofx.vinyl.server;
+    exports com.example.hellofx.vinyl.server.log;
+    exports com.example.hellofx.vinyl.server.strategy;
     exports Simulation;
     opens Simulation to javafx.fxml;
 }

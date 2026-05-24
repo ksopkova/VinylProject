@@ -1,7 +1,6 @@
 package com.example.hellofx.vinyl.View;
 
 import Simulation.RandomUserSimulator;
-import com.example.hellofx.vinyl.Model.Library;
 import com.example.hellofx.vinyl.Model.Vinyl;
 import com.example.hellofx.vinyl.ViewModel.MainScreenViewModel;
 import javafx.beans.binding.Bindings;
@@ -24,42 +23,14 @@ public class MainScreenView {
     @FXML private TableColumn<Vinyl, String> borrowedByColumn;
     @FXML private Button startSimulationButton;
     @FXML private Label statusLabel;
+    @FXML private ActivityLogView activityLogController;
 
     private MainScreenViewModel viewModel;
     private boolean simulationStarted;
     private Thread simulatorThread;
 
     public void initialize() {
-        Library library = new Library();
-        viewModel = new MainScreenViewModel(library);
-
-        // test data
-        viewModel.addVinyl(new Vinyl("IGOR", "Tyler, The Creator", 2019));
-        viewModel.addVinyl(new Vinyl("My Beautiful Dark Twisted Fantasy", "Kanye West", 2010));
-        viewModel.addVinyl(new Vinyl("good kid, m.A.A.d city", "Kendrick Lamar", 2012));
-        viewModel.addVinyl(new Vinyl("Madvillainy", "Madvillain", 2004));
-        viewModel.addVinyl(new Vinyl("The Miseducation of Lauryn Hill", "Lauryn Hill", 1998));
-
-        viewModel.addVinyl(new Vinyl("Mezzanine", "Massive Attack", 1998));
-        viewModel.addVinyl(new Vinyl("Dummy", "Portishead", 1994));
-        viewModel.addVinyl(new Vinyl("Selected Ambient Works 85–92", "Aphex Twin", 1992));
-        viewModel.addVinyl(new Vinyl("Discovery", "Daft Punk", 2001));
-        viewModel.addVinyl(new Vinyl("Untrue", "Burial", 2007));
-        viewModel.addVinyl(new Vinyl("Since I Left You", "The Avalanches", 2000));
-
-        viewModel.addVinyl(new Vinyl("Unknown Pleasures", "Joy Division", 1979));
-        viewModel.addVinyl(new Vinyl("London Calling", "The Clash", 1979));
-        viewModel.addVinyl(new Vinyl("The Queen Is Dead", "The Smiths", 1986));
-        viewModel.addVinyl(new Vinyl("Rumours", "Fleetwood Mac", 1977));
-        viewModel.addVinyl(new Vinyl("Hounds of Love", "Kate Bush", 1985));
-
-        viewModel.addVinyl(new Vinyl("Blue Train", "John Coltrane", 1957));
-        viewModel.addVinyl(new Vinyl("Kind of Blue", "Miles Davis", 1959));
-        viewModel.addVinyl(new Vinyl("Time Out", "The Dave Brubeck Quartet", 1959));
-
-        viewModel.addVinyl(new Vinyl("Currents", "Tame Impala", 2015));
-        viewModel.addVinyl(new Vinyl("Melodrama", "Lorde", 2017));
-        viewModel.addVinyl(new Vinyl("Punisher", "Phoebe Bridgers", 2020));
+        viewModel = new MainScreenViewModel();
 
         // base columns
         titleColumn.setCellValueFactory(data -> data.getValue().getTitleProperty());
@@ -88,36 +59,38 @@ public class MainScreenView {
 
         // connecting table to the ViewModel list
         vinylTable.setItems(viewModel.getVinyls());
+        statusLabel.textProperty().bind(viewModel.statusProperty());
+        activityLogController.bind(viewModel);
     }
 
     @FXML
     private void onReserve() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        statusLabel.setText(viewModel.reserve(selected));
+        viewModel.reserve(selected);
     }
 
     @FXML
     private void onBorrow() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        statusLabel.setText(viewModel.borrow(selected));
+        viewModel.borrow(selected);
     }
 
     @FXML
     private void onReturn() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        statusLabel.setText(viewModel.returnVinyl(selected));
+        viewModel.returnVinyl(selected);
     }
 
     @FXML
     private void onRemove() {
         Vinyl selected = vinylTable.getSelectionModel().getSelectedItem();
-        statusLabel.setText(viewModel.remove(selected));
+        viewModel.remove(selected);
     }
 
     @FXML
     private void onStartSimulation() {
         if (simulationStarted) {
-            statusLabel.setText("Simulation is already running.");
+            viewModel.setStatus("Simulation is already running.");
             return;
         }
 
@@ -126,6 +99,6 @@ public class MainScreenView {
         simulatorThread = new Thread(new RandomUserSimulator(viewModel));
         simulatorThread.setDaemon(true);
         simulatorThread.start();
-        statusLabel.setText("Simulation started.");
+        viewModel.setStatus("Simulation started.");
     }
 }

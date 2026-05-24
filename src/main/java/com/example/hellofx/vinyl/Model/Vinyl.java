@@ -1,11 +1,16 @@
 package com.example.hellofx.vinyl.Model;
 
 import com.example.hellofx.vinyl.Model.State.AvailableState;
+import com.example.hellofx.vinyl.Model.State.BorrowedState;
 import com.example.hellofx.vinyl.Model.State.IVinylState;
+import com.example.hellofx.vinyl.Model.State.ReservedState;
 import javafx.beans.property.*;
+
+import java.util.UUID;
 
 public class Vinyl {
 
+    private final StringProperty id = new SimpleStringProperty();
     private final StringProperty title = new SimpleStringProperty();   //bcs I'm creating object not String (inside this object is information for Java Fx)//
     private final StringProperty artist = new SimpleStringProperty();
     private final IntegerProperty year = new SimpleIntegerProperty();
@@ -14,7 +19,7 @@ public class Vinyl {
     //I use ObjectProperty to take advantage of JavaFX’s built-in Observer mechanism, which ensures that the UI automatically reacts to changes in the state object. Additionally, it enables me to maintain a polymorphic implementation of the State pattern rather than relying on a simple enum or String to represent the state.
     private final StringProperty stateName = new SimpleStringProperty();
 
-    // NEW: who reserved / who borrowed
+    // NEW: user who reserved / who borrowed
     private final ObjectProperty<User> reservedBy = new SimpleObjectProperty<>(null);
     private final ObjectProperty<User> borrowedBy = new SimpleObjectProperty<>(null);
 
@@ -23,6 +28,12 @@ public class Vinyl {
 
 
     public Vinyl(String title, String artist, int year) {
+        this(UUID.randomUUID().toString(), title, artist, year);
+    }
+//UUID.randomUUID() creates random unique ID (f.e. 550e8400-e29b-41d4-a716-446655440000)
+
+    public Vinyl(String id, String title, String artist, int year) {
+        this.id.set(id);
         this.title.set(title);  //when object's string is set JavaFX get notified about it//
         this.artist.set(artist);
         this.year.set(year);
@@ -39,25 +50,29 @@ public class Vinyl {
 
     // CHANGED: reserve/borrow/return need a user
     public void reserve(User user) {
+
         state.get().reserve(this, user);
     }
 
     public void borrow(User user) {
+
         state.get().borrow(this, user);
     }
 
     public void returnVinyl(User user) {
+
         state.get().returnVinyl(this, user);
     }
 
     public void remove() {
+
         state.get().remove(this);
     }
 
 
 
 
-    // NEW: reservedBy/borrowedBy accessors
+    // NEW: reservedBy/borrowedBy user
     public User getReservedBy() { return reservedBy.get(); }
     public ObjectProperty<User> reservedByProperty() { return reservedBy; }
     public void setReservedBy(User user) { reservedBy.set(user); }
@@ -85,10 +100,20 @@ public class Vinyl {
     }
 
 
+    public String getId() { return id.get(); }
+    public StringProperty getIdProperty() { return id; }
 
     public StringProperty getTitleProperty() { return title; }
+    public String getTitle() { return title.get(); }
+    public void setTitle(String title) { this.title.set(title); }
+
     public StringProperty getArtistProperty() { return artist; }
+    public String getArtist() { return artist.get(); }
+    public void setArtist(String artist) { this.artist.set(artist); }
+
     public IntegerProperty getYearProperty() { return year; }
+    public int getYear() { return year.get(); }
+    public void setYear(int year) { this.year.set(year); }
 
 
     public StringProperty stateNameProperty() {
@@ -97,6 +122,25 @@ public class Vinyl {
 
     public void setState(IVinylState newState) {
         state.set(newState);
+    }
+
+    public void applyRemoteState(String remoteStateName,
+                                 User reservedBy,
+                                 User borrowedBy,
+                                 boolean removalRequested,
+                                 boolean reservationBlocked) {
+        this.reservedBy.set(reservedBy);
+        this.borrowedBy.set(borrowedBy);
+        this.removalRequested.set(removalRequested);
+        this.reservationBlocked.set(reservationBlocked);
+
+        if ("Reserved".equals(remoteStateName)) {
+            setState(new ReservedState());
+        } else if ("Borrowed".equals(remoteStateName)) {
+            setState(new BorrowedState());
+        } else {
+            setState(new AvailableState());
+        }
     }
 
 
